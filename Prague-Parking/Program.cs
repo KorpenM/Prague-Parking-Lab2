@@ -11,32 +11,32 @@ do
 {
     //Menu choices and operations
 
-    string operation = "";
+
     int choice = 0;
 
     int Menu(int choice)
     {
         switch (choice)
         {
-            case 0:
-                operation = "park";
+            case 1:
+                Console.WriteLine("Park");
                 Park();
                 break;
-            case 1:
-                operation = "search";
+            case 2:
+                Console.WriteLine("Search");
                 Search();
                 break;
-            case 2:
-                operation = " showAll";
-                break;
             case 3:
-                operation = "move";
+                Console.WriteLine("Show All");
                 break;
             case 4:
-                operation = "get/remove";
+                Console.WriteLine("Move");
                 break;
             case 5:
-                operation = "shutdown";
+                Console.WriteLine("Get / remove");
+                break;
+            case 6:
+                Console.WriteLine("Shutdown");
                 systemOn = false;
                 Console.WriteLine("Good bye!");
                 break;
@@ -44,6 +44,7 @@ do
                 Console.WriteLine("nothing");
                 break;
         }
+       
         return choice;
     }
 
@@ -51,6 +52,7 @@ do
 
     Console.WriteLine("Please choose an option (1 - 6)");
     choice = int.Parse(Console.ReadLine());
+    
     Menu(choice);
 
     /*************** Methods for operations *************/
@@ -79,16 +81,13 @@ do
             if (carPark[i] == null)
             {
                 carPark[i] = vehicle;
+           
+                Console.WriteLine($"You parked {type} with reg {reg} at space: {i}");
                 break;
             }
         }
 
-        for (int i = 0; i < carPark.Length; i++)
-        {
-            if (carPark[i] != null)
-                Console.WriteLine($"You parked {type} with reg {reg} at space: {carPark[i]}");
-            break;
-        }
+       
 
 
     }
@@ -99,8 +98,11 @@ do
     {
 
     }
-
+    
 } while (systemOn);
 
-
+for (int i = 0;i < carPark.Length;i++)
+{
+    Console.WriteLine(i + " | " + carPark[i]);
+}
 
