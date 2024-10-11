@@ -1,108 +1,76 @@
 ﻿//Prague parking
 
-string car = "";
-string mc = "";
-bool systemOn = true;
-string[] carPark = new string[101];
+string[] parking = new string[100];
+int[] slotNr = new int[101];
+int menu = 0;
 
 /************** Main program loop ****************/
+//Hell0asdsad
 
 do
 {
-    //Menu choices and operations
+    Console.Clear();
+    Console.WriteLine("[0] End Program");
+    Console.WriteLine("[1] Add veichle");
+    Console.WriteLine("[2] Show Parking");
 
-
-    int choice = 0;
-
-    int Menu(int choice)
+    menu = int.Parse(Console.ReadLine());
+    switch (menu)
     {
-        switch (choice)
-        {
-            case 1:
-                Console.WriteLine("Park");
-                Park();
-                break;
-            case 2:
-                Console.WriteLine("Search");
-                Search();
-                break;
-            case 3:
-                Console.WriteLine("Show All");
-                break;
-            case 4:
-                Console.WriteLine("Move");
-                break;
-            case 5:
-                Console.WriteLine("Get / remove");
-                break;
-            case 6:
-                Console.WriteLine("Shutdown");
-                systemOn = false;
-                Console.WriteLine("Good bye!");
-                break;
-            default:
-                Console.WriteLine("nothing");
-                break;
-        }
-       
-        return choice;
+        case 1:
+            addVeichle();
+            break;
+        case 2:
+            showParking();
+            break;
+        case 0:
+            Console.Clear();
+            Console.WriteLine("Ending program");
+            break;
     }
+} while (menu != 0);
 
+/*************** Methods for operations *************/
 
-
-    Console.WriteLine("Please choose an option (1 - 6)");
-    choice = int.Parse(Console.ReadLine());
-    
-    Menu(choice);
-
-    /*************** Methods for operations *************/
-
-    //Park
-    void Park()
-    {
-        //Get vehicle registration number and type
-        string reg = "";
-        string type = "";
-        string vehicle = "";
-
-        Console.WriteLine("Please enter registration number:");
-        reg = Console.ReadLine();
-        Console.WriteLine("Is the vehicle a car or a mc? (type car or mc)");
-        type = Console.ReadLine();
-
-        //Concat strings with separator
-
-        vehicle = reg + "#" + type;
-
-        //Find space and park
-
-        for (int i = 0; i < carPark.Length; i++)
-        {
-            if (carPark[i] == null)
-            {
-                carPark[i] = vehicle;
-           
-                Console.WriteLine($"You parked {type} with reg {reg} at space: {i}");
-                break;
-            }
-        }
-
-       
-
-
-    }
-
-    //Search car
-
-    void Search()
-    {
-
-    }
-    
-} while (systemOn);
-
-for (int i = 0;i < carPark.Length;i++)
+//Park
+void addVeichle()
 {
-    Console.WriteLine(i + " | " + carPark[i]);
+    Console.Clear();
+    Console.Write("Type in the registration plate for the veichle you'd like to add: ");
+    string newPlate = Console.ReadLine();
+
+    for (int i = 0; i < parking.Length; i++)
+    {
+        if (parking[i] != null)
+        {
+            continue;
+        }
+        parking[i] = newPlate;
+        break;
+    }
 }
 
+void showParking()
+{
+    Console.Clear();
+    Console.WriteLine("Parking: ");
+    Console.WriteLine(" ");
+    for (int i = 0; i < parking.Length; i++)
+    {
+        Console.ForegroundColor = ConsoleColor.Red;
+        Console.Write(parking[i] + " ");
+        Console.ResetColor();
+
+        slotNr[i] = i + 1;
+
+        if (parking[i] == null)
+        {
+            Console.ForegroundColor = ConsoleColor.Green;
+            Console.Write("Slot " + slotNr[i]);
+            Console.ResetColor();
+        }
+    }
+
+    Console.Write("\n\nPress random key to continue...");
+    Console.ReadKey(true);
+}
