@@ -57,7 +57,7 @@ do
         return choice;
     }
 
-    Console.WriteLine("Please choose an option (1 - 6)");
+    Console.WriteLine("Please choose an option (1 - 7)");
     Console.WriteLine("1. Park");
     Console.WriteLine("2. Search");
     Console.WriteLine("3. Show all");
