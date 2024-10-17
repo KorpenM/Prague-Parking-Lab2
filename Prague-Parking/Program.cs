@@ -158,15 +158,14 @@ do
         ReturnToMenu();
     }
 
+    //Optimise parking, merge a single mc to a space with another mc
     void OptimiseParking()
     {
-
         int spaceOne = 0;
         int spaceTwo = 0;
         string mcOne = "";
         string mcTwo = "";
         
-
        for (int i = 0; i < carPark.Length; i++)
         {
             if (carPark[i] == null)
@@ -196,25 +195,16 @@ do
         carPark[spaceTwo] = null;
         if (mcTwo != "")
         {
-            Console.WriteLine($"You have moved mc with registration {mcTwo?.Substring(0, 6)}  to space {spaceOne}");
+            Console.WriteLine($"You have moved mc with registration {mcTwo.Substring(0, 6)}");
+            Console.WriteLine($"From space: {spaceTwo} to space: {spaceOne}.");
             ReturnToMenu();
         }
         else
         {
             Console.WriteLine("No mc's have been moved...");
             ReturnToMenu();
-
         }
-
-        
-       
-
-        //carPark[newSpace] = carPark[currentSpace];
-        //carPark[currentSpace] = null;
-
-
     }
-
 
     //Get space helper method
     int getSpace(string reg = "", int space = 0)
@@ -265,8 +255,6 @@ do
             reg = Console.ReadLine() ?? "";
             return reg;
         }
-
-        
     }
 
     //Lets user enter vehicle type
@@ -276,20 +264,6 @@ do
         string type = Console.ReadLine() ?? "";
         return type;
     }
-
-   
-
-    //void CheckVehicleType(int i)
-    //{
-    //    if (carPark[i].Contains("car"))
-    //    {
-    //        return;
-    //    }
-    //    else if (carPark[i].Contains("mc"))
-    //    {
-
-    //    }
-    //}
 
 } while (systemOn) ;
 
