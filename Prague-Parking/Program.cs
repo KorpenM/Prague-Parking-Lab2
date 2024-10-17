@@ -40,6 +40,12 @@ do
                 break;
             case 6:
                 Console.Clear();
+                Console.WriteLine("Optimise parking");
+                OptimiseParking();
+                break;
+            case 7:
+
+                Console.Clear();
                 Console.WriteLine("Shutdown");
                 systemOn = false;
                 Console.WriteLine("Good bye!");
@@ -57,7 +63,8 @@ do
     Console.WriteLine("3. Show all");
     Console.WriteLine("4. Move");
     Console.WriteLine("5. Remove");
-    Console.WriteLine("6. Shut down");
+    Console.WriteLine("6. Optimise parking");
+    Console.WriteLine("7. Shut down");
 
     choice = int.Parse(Console.ReadLine() ?? "");
     Menu(choice);
@@ -151,6 +158,63 @@ do
         ReturnToMenu();
     }
 
+    void OptimiseParking()
+    {
+
+        int spaceOne = 0;
+        int spaceTwo = 0;
+        string mcOne = "";
+        string mcTwo = "";
+        
+
+       for (int i = 0; i < carPark.Length; i++)
+        {
+            if (carPark[i] == null)
+            {
+                continue;
+            }
+            else if (carPark[i].Contains("mc") && !carPark[i].Contains('|'))
+            {
+                spaceOne = i;
+                mcOne = carPark[i];
+                
+                for (int j = i + 1; j < carPark[i].Length; j++)
+                {
+                    if (carPark[j].Contains("mc"))
+                    {
+                        spaceTwo = j;
+                        mcTwo = carPark[j];
+                        break;
+                    }
+                }
+                break;
+            }
+        }
+
+        string optimisedParking = carPark[spaceOne] + "|" + carPark[spaceTwo];
+        carPark[spaceOne] = optimisedParking;
+        carPark[spaceTwo] = null;
+        if (mcTwo != "")
+        {
+            Console.WriteLine($"You have moved mc with registration {mcTwo?.Substring(0, 6)}  to space {spaceOne}");
+            ReturnToMenu();
+        }
+        else
+        {
+            Console.WriteLine("No mc's have been moved...");
+            ReturnToMenu();
+
+        }
+
+        
+       
+
+        //carPark[newSpace] = carPark[currentSpace];
+        //carPark[currentSpace] = null;
+
+
+    }
+
 
     //Get space helper method
     int getSpace(string reg = "", int space = 0)
@@ -213,10 +277,7 @@ do
         return type;
     }
 
-    void OptimiseParking()
-    {
-
-    }
+   
 
     //void CheckVehicleType(int i)
     //{
