@@ -135,7 +135,7 @@ class Program
         {
             if (parkingSpots[i] == null)  // Om platsen är ledig
             {
-                
+                // Skapa ett nytt ParkingSpot-objekt med regnummer och fordonstyp
                 parkingSpots[i] = new ParkingSpot(regNumber, type);
                 Console.WriteLine($"{(type.ToLower() == "mc" ? "MC" : "Car")} {regNumber} parked on spot {i + 1}");
                 Console.WriteLine($"Check in: {parkingSpots[i].CheckInTime:yyyy-MM-dd HH:mm:ss}");
@@ -143,7 +143,7 @@ class Program
             }
             else if (type.ToLower() == "mc" && parkingSpots[i].VehicleType == "mc" && i + 1 < parkingSpots.Length && parkingSpots[i + 1] == null)
             {
-                
+                // Om det är en MC och platsen bredvid är ledig, dubbelparkera
                 parkingSpots[i + 1] = new ParkingSpot(regNumber, type);
                 Console.WriteLine($"MC {regNumber} parked on spot {i + 2}");
                 Console.WriteLine($"Check in: {parkingSpots[i + 1].CheckInTime:yyyy-MM-dd HH:mm:ss}");
@@ -161,27 +161,7 @@ class Program
             if (parkingSpots[i] != null && parkingSpots[i].RegNumber == regNumber)
             {
                 TimeSpan duration = parkingSpots[i].GetParkDuration();
-
-                int days = duration.Days;
-                int hours = duration.Hours;
-                int minutes = duration.Minutes;
-
-                
-                string durationString = "";
-
-                if (days > 0)
-                {
-                    durationString += $"{days} day(s) ";
-                }
-
-                if (hours > 0)
-                {
-                    durationString += $"{hours} hour(s) ";
-                }
-
-                durationString += $"{minutes} minute(s)";
-
-                Console.WriteLine($"{regNumber} has been parked for {durationString}.");
+                Console.WriteLine($"{regNumber} has been parked for {duration.TotalMinutes:F2} minutes.");
                 parkingSpots[i] = null;
                 Console.WriteLine($"{regNumber} has been retrieved from spot {i + 1}.");
                 return;
@@ -189,7 +169,6 @@ class Program
             else if (parkingSpots[i] != null && parkingSpots[i].VehicleType == "mc" && parkingSpots[i].RegNumber.Contains(","))
             {
                 var mcList = parkingSpots[i].RegNumber.Split(',');
-
                 if (mcList[0].Contains(regNumber))
                 {
                     parkingSpots[i].RegNumber = mcList[1].Trim();
@@ -200,26 +179,7 @@ class Program
                 }
 
                 TimeSpan duration = parkingSpots[i].GetParkDuration();
-
-                int days = duration.Days;
-                int hours = duration.Hours;
-                int minutes = duration.Minutes;
-
-              string durationString = "";
-
-                if (days > 0)
-                {
-                    durationString += $"{days} day(s) ";
-                }
-
-                if (hours > 0)
-                {
-                    durationString += $"{hours} hour(s) ";
-                }
-
-                durationString += $"{minutes} minute(s)";
-
-                Console.WriteLine($"{regNumber} has been parked for {durationString}.");
+                Console.WriteLine($"{regNumber} has been parked in {duration.TotalMinutes:F2} minutes.");
                 Console.WriteLine($"MC {regNumber} has been retrieved from spot {i + 1}.");
                 return;
             }
@@ -227,7 +187,6 @@ class Program
 
         Console.WriteLine($"{regNumber} license - not found.");
     }
-
 
     static void MoveVehicle(int fromSpot, int toSpot)
     {

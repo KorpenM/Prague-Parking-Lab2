@@ -24,7 +24,6 @@ public class ParkingSpot
     }
 }
 
-
 class Program
 {
     static ParkingSpot[] parkingSpots = new ParkingSpot[100];
@@ -40,11 +39,6 @@ class Program
         while (running)
         {
             Console.Clear();
-
-            Console.WriteLine("======================");
-            Console.WriteLine("   PRAGUE PARKING");
-            Console.WriteLine("======================\n");
-
             Console.WriteLine("Choose option:");
             Console.WriteLine("1. Park Vehicle");
             Console.WriteLine("2. Retrieve/Remove Vehicle");
@@ -127,7 +121,7 @@ class Program
 
         while (type.ToLower() != "mc" && type.ToLower() != "car")
         {
-            Console.WriteLine("Invalid vehicletype. Enter Car or MC: ");
+            Console.WriteLine("Invalid vehicle type. Enter Car or MC: ");
             type = Console.ReadLine();
         }
 
@@ -135,23 +129,14 @@ class Program
         {
             if (parkingSpots[i] == null)  // Om platsen är ledig
             {
-                
                 parkingSpots[i] = new ParkingSpot(regNumber, type);
                 Console.WriteLine($"{(type.ToLower() == "mc" ? "MC" : "Car")} {regNumber} parked on spot {i + 1}");
                 Console.WriteLine($"Check in: {parkingSpots[i].CheckInTime:yyyy-MM-dd HH:mm:ss}");
                 return;
             }
-            else if (type.ToLower() == "mc" && parkingSpots[i].VehicleType == "mc" && i + 1 < parkingSpots.Length && parkingSpots[i + 1] == null)
-            {
-                
-                parkingSpots[i + 1] = new ParkingSpot(regNumber, type);
-                Console.WriteLine($"MC {regNumber} parked on spot {i + 2}");
-                Console.WriteLine($"Check in: {parkingSpots[i + 1].CheckInTime:yyyy-MM-dd HH:mm:ss}");
-                return;
-            }
         }
 
-        Console.WriteLine("No available parkingspots.");
+        Console.WriteLine("No available parking spots.");
     }
 
     static void RemoveVehicle(string regNumber)
@@ -161,73 +146,15 @@ class Program
             if (parkingSpots[i] != null && parkingSpots[i].RegNumber == regNumber)
             {
                 TimeSpan duration = parkingSpots[i].GetParkDuration();
-
-                int days = duration.Days;
-                int hours = duration.Hours;
-                int minutes = duration.Minutes;
-
-                
-                string durationString = "";
-
-                if (days > 0)
-                {
-                    durationString += $"{days} day(s) ";
-                }
-
-                if (hours > 0)
-                {
-                    durationString += $"{hours} hour(s) ";
-                }
-
-                durationString += $"{minutes} minute(s)";
-
-                Console.WriteLine($"{regNumber} has been parked for {durationString}.");
+                Console.WriteLine($"{regNumber} has been parked for {duration.TotalMinutes:F2} minutes.");
                 parkingSpots[i] = null;
                 Console.WriteLine($"{regNumber} has been retrieved from spot {i + 1}.");
-                return;
-            }
-            else if (parkingSpots[i] != null && parkingSpots[i].VehicleType == "mc" && parkingSpots[i].RegNumber.Contains(","))
-            {
-                var mcList = parkingSpots[i].RegNumber.Split(',');
-
-                if (mcList[0].Contains(regNumber))
-                {
-                    parkingSpots[i].RegNumber = mcList[1].Trim();
-                }
-                else if (mcList[1].Contains(regNumber))
-                {
-                    parkingSpots[i].RegNumber = mcList[0].Trim();
-                }
-
-                TimeSpan duration = parkingSpots[i].GetParkDuration();
-
-                int days = duration.Days;
-                int hours = duration.Hours;
-                int minutes = duration.Minutes;
-
-              string durationString = "";
-
-                if (days > 0)
-                {
-                    durationString += $"{days} day(s) ";
-                }
-
-                if (hours > 0)
-                {
-                    durationString += $"{hours} hour(s) ";
-                }
-
-                durationString += $"{minutes} minute(s)";
-
-                Console.WriteLine($"{regNumber} has been parked for {durationString}.");
-                Console.WriteLine($"MC {regNumber} has been retrieved from spot {i + 1}.");
                 return;
             }
         }
 
         Console.WriteLine($"{regNumber} license - not found.");
     }
-
 
     static void MoveVehicle(int fromSpot, int toSpot)
     {
@@ -245,15 +172,6 @@ class Program
             parkingSpots[toSpot] = parkingSpots[fromSpot];
             parkingSpots[fromSpot] = null;
             Console.WriteLine($"Vehicle moved from spot {fromSpot + 1} to spot {toSpot + 1}.");
-            return;
-        }
-
-        if (parkingSpots[toSpot].VehicleType.ToLower() == "mc" && parkingSpots[fromSpot].VehicleType.ToLower() == "mc")
-        {
-            Console.WriteLine($"Matching MC {parkingSpots[fromSpot].RegNumber} with MC {parkingSpots[toSpot].RegNumber}");
-            parkingSpots[toSpot].RegNumber += $", {parkingSpots[fromSpot].RegNumber}";
-            parkingSpots[fromSpot] = null;
-            Console.WriteLine($"Moved MC to spot {toSpot + 1}.");
         }
         else
         {
@@ -291,14 +209,14 @@ class Program
 
     static void ShowRegisteredVehicles()
     {
-        Console.WriteLine("Active parkings | ");
+        Console.WriteLine("Active parkings:");
         bool foundAnyVehicle = false;
 
         for (int i = 0; i < parkingSpots.Length; i++)
         {
             if (parkingSpots[i] != null)
             {
-                Console.WriteLine($" {parkingSpots[i]}: P-spot {i + 1}");
+                Console.WriteLine($"{parkingSpots[i]}: P-spot {i + 1}");
                 foundAnyVehicle = true;
             }
         }
@@ -313,8 +231,7 @@ class Program
     {
         int spotsPerRow = 10;
 
-        Console.WriteLine("Compact view over parkinggrid (Green = Available," +
-            "Yellow = 1/2 full, Red = Busy/Taken)\n");
+        Console.WriteLine("Compact view over parking grid (Green = Available, Yellow = 1/2 full, Red = Busy/Taken)\n");
 
         for (int i = 0; i < parkingSpots.Length; i++)
         {
@@ -327,7 +244,7 @@ class Program
             {
                 Console.ForegroundColor = ConsoleColor.Green;
             }
-            else if (parkingSpots[i].VehicleType.ToLower() == "mc" && !parkingSpots[i].RegNumber.Contains(","))
+            else if (parkingSpots[i].VehicleType.ToLower() == "mc")
             {
                 Console.ForegroundColor = ConsoleColor.Yellow;
             }

@@ -14,6 +14,11 @@ void ShowMenu() // Metoden för menyhantering
     while (running)
     {
         Console.Clear();
+
+        Console.WriteLine("======================");
+        Console.WriteLine("   PRAGUE PARKING");
+        Console.WriteLine("======================\n");
+
         Console.WriteLine("Välj ett alternativ:");
         Console.WriteLine("1. Parkera:");
         Console.WriteLine("2. Hämta ut ditt fordon:");
