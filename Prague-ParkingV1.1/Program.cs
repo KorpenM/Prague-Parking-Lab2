@@ -135,7 +135,7 @@ class Program
         {
             if (parkingSpots[i] == null)  // Om platsen är ledig
             {
-                
+
                 parkingSpots[i] = new ParkingSpot(regNumber, type);
                 Console.WriteLine($"{(type.ToLower() == "mc" ? "MC" : "Car")} {regNumber} parked on spot {i + 1}");
                 Console.WriteLine($"Check in: {parkingSpots[i].CheckInTime:yyyy-MM-dd HH:mm:ss}");
@@ -143,7 +143,7 @@ class Program
             }
             else if (type.ToLower() == "mc" && parkingSpots[i].VehicleType == "mc" && i + 1 < parkingSpots.Length && parkingSpots[i + 1] == null)
             {
-                
+
                 parkingSpots[i + 1] = new ParkingSpot(regNumber, type);
                 Console.WriteLine($"MC {regNumber} parked on spot {i + 2}");
                 Console.WriteLine($"Check in: {parkingSpots[i + 1].CheckInTime:yyyy-MM-dd HH:mm:ss}");
@@ -166,7 +166,7 @@ class Program
                 int hours = duration.Hours;
                 int minutes = duration.Minutes;
 
-                
+
                 string durationString = "";
 
                 if (days > 0)
@@ -205,7 +205,7 @@ class Program
                 int hours = duration.Hours;
                 int minutes = duration.Minutes;
 
-              string durationString = "";
+                string durationString = "";
 
                 if (days > 0)
                 {
@@ -245,6 +245,18 @@ class Program
             parkingSpots[toSpot] = parkingSpots[fromSpot];
             parkingSpots[fromSpot] = null;
             Console.WriteLine($"Vehicle moved from spot {fromSpot + 1} to spot {toSpot + 1}.");
+            return;
+        }
+
+        if (parkingSpots[toSpot].VehicleType.ToLower() == "car")
+        {
+            Console.WriteLine("Park-spot busy. Cannot move to this spot.");
+            return;
+        }
+
+        if (parkingSpots[toSpot].VehicleType.ToLower() == "mc" && parkingSpots[toSpot].RegNumber.Contains(","))
+        {
+            Console.WriteLine("Cannot move to this spot. There are already 2 MC or 1 car parked.");
             return;
         }
 
