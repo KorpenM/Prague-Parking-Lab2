@@ -32,22 +32,22 @@ void ShowMenu() // Metoden för menyhantering
 
         switch (choice)
         {
-            // Detta är standard parkering
-            /* case "1":
+            case "1":
                 Console.WriteLine("Ange regnummer:");
                 string regNumber = Console.ReadLine();
                 Console.WriteLine("Ange fordonstyp (MC/Bil):");
                 string type = Console.ReadLine();
                 ParkVehicle(regNumber, type); // Parkera fordonet
-               break; */
+               break;
 
-            case "1": // Random parkering
+            /*case "1": // Random parkering
                 Console.WriteLine("Ange regnummer:");
                 string regNumber = Console.ReadLine();
                 Console.WriteLine("Ange fordonstyp (MC/Bil):");
                 string type = Console.ReadLine();
                 ParkRandom(regNumber, type); // Parkera fordonet
-                break;
+                break;*/
+
             case "2":
                 Console.WriteLine("Ange regnummer:");
                 string regNumberRemove = Console.ReadLine();
@@ -84,8 +84,6 @@ void ShowMenu() // Metoden för menyhantering
     }
 }
 
-
-// Metod för att parkera fordon
 void ParkVehicle(string regNumber, string type)
 {
     if (regNumber.Length > 10)
@@ -113,7 +111,6 @@ void ParkVehicle(string regNumber, string type)
 }
 
 // Extra metod om vi vill slumpa P-plats vid parkering
-// för variation i programmet
 void ParkRandom(string regNumber, string type)
 {
     if (regNumber.Length > 10)
@@ -152,8 +149,6 @@ void ParkRandom(string regNumber, string type)
     }
 }
 
-// Tar bort fordon från p-plats enl. regnummer.
-// Letar efter fordonet med regnummer, tas bort om det hittas.
 void RemoveVehicle(string regNumber)
 {
     for (int i = 0; i < parkingSpots.Length; i++)
@@ -176,8 +171,6 @@ void RemoveVehicle(string regNumber)
     Console.WriteLine($"Fordon med regnummer {regNumber} hittas ej.");
 }
 
-// Låter användaren flytta fordon från x till y. Tar startplats och en slutplats
-// som input, kontrollerar om startplatsen är upptagen och slutplatsen är ledig
 void MoveVehicle(int fromSpot, int toSpot)
 {
     // Justerar så att index börjar på 1 för användarvänlighet
@@ -209,7 +202,7 @@ void MoveVehicle(int fromSpot, int toSpot)
     }
 }
 
-// Låter användaren söka efter fordon enl. regnummer och visar sedan p-plats
+
 void FindVehicle(string regNumber)
 {
     for (int i = 0; i < parkingSpots.Length; i++)
@@ -223,8 +216,6 @@ void FindVehicle(string regNumber)
     Console.WriteLine($"{regNumber} hittas ej.");
 }
 
-
-// Metod för att visa parkeringsplatser
 void ShowParkingSpots()
 {
     for (int i = 0; i < parkingSpots.Length; i++)
@@ -240,7 +231,6 @@ void ShowParkingSpots()
     }
 }
 
-// Metod för att visa alla inskrivna fordon
 void ShowRegisteredVehicles()
 {
     Console.WriteLine("Aktiva parkeringar: ");
