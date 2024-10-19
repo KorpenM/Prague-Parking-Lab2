@@ -14,10 +14,10 @@ do
     Console.Clear();
     Console.WriteLine("=== Welcome to Prague Park ===");
     Console.WriteLine("\n[0] End Program");
-    Console.WriteLine("[1] Add veichle");
-    Console.WriteLine("[2] Remove veichle");
-    Console.WriteLine("[3] Relocate veichle");
-    Console.WriteLine("[4] Find veichle");
+    Console.WriteLine("[1] Add vehicle");
+    Console.WriteLine("[2] Remove vehicle");
+    Console.WriteLine("[3] Relocate vehicle");
+    Console.WriteLine("[4] Find vehicle");
     Console.WriteLine("[5] Show Parking\n");
     Console.WriteLine("To use program:\nType in the number of one of the above functions,\nand then press the [ENTER] key to run it\n");
 
@@ -25,16 +25,16 @@ do
     switch (menu)
     {
         case 1:
-            addVeichle();
+            addVehicle();
             break;
         case 2:
-            removeVeichle();
+            removeVehicle();
             break;
         case 3:
-            relocateVeichle();
+            relocateVehicle();
             break;
         case 4:
-            findVeichle();
+            findVehicle();
             break;
         case 5:
             showParking();
@@ -47,7 +47,7 @@ do
 } while (menu != 0); //The do-while loop and program ends when the user loads the int with a 0
 
 //Park
-void addVeichle()
+void addVehicle()
 {
     Console.Clear();
     Console.Write("Type in the registration plate for the veichle you'd like to park: ");
@@ -97,8 +97,13 @@ void addVeichle()
             if (spotNr[i] == moveTo && parking[i] != null)
             {
                 string subString = parking[i].ToString(); //Creates a substring from the parking-array
+                int searchMotorcycle = subString.IndexOf("MC#"); //Used to find whether the substring is a motorcycel or not
                 int searchSeperator = subString.IndexOf("|"); //Used to find whether the substring has a seperator or not
 
+                if (searchMotorcycle == -1)
+                {
+                    break;
+                }
                 if (searchSeperator > -1)
                 {
                     Console.WriteLine("\nThere's already two motorcycles parked at this spot");
@@ -150,7 +155,7 @@ void addVeichle()
 }
 
 //Remove
-void removeVeichle()
+void removeVehicle()
 {
     Console.Clear();
     Console.Write("Type in the registration plate of the veichle that you'd like to remove: ");
@@ -178,30 +183,37 @@ void removeVeichle()
         return;
     }
 
-    //Used to check whether the veichle the user wants is there or not
-    int plateFound = 0;
-    for (int i = 0; i < parking.Length; ++i)
-    {
-        for (int j = 0; j < parking.Length; j++)
-        {
-            if (parking[j] == regPlate)
-            {
-                plateFound++;
-            }
-        }
-        //Sends the user back to the menu if nothing was found
-        if (plateFound == 0)
-        {
-            Console.WriteLine("\nThere is no veichle with that registration plate");
-            Console.Write("\n\nPress random key to continue...");
-            Console.ReadKey();
-            return;
-        }
-    }
-
-    //Used to find and remove the veichle that the user is looking for
     for (int i = 0; i < parking.Length; i++)
     {
+        if (parking[i] != null)
+        {
+            string subString = parking[i].ToString();
+            int searchSeperator = subString.IndexOf("|");
+
+            if (searchSeperator > -1)
+            {
+                string[] splitStrings = subString.Split("|");
+                if (splitStrings[0] == regPlate)
+                {
+                    parking[i] = splitStrings[1];
+                    Console.WriteLine(" ");
+                    Console.WriteLine($"{regPlate} has been removed from P-Spot {spotNr[i]}");
+                    Console.Write("\n\nPress random key to return to continue...");
+                    Console.ReadKey();
+                    return;
+                }
+                else if (splitStrings[1] == regPlate)
+                {
+                    parking[i] = splitStrings[0];
+                    Console.WriteLine(" ");
+                    Console.WriteLine($"{regPlate} has been removed from P-Spot {spotNr[i]}");
+                    Console.Write("\n\nPress random key to return to continue...");
+                    Console.ReadKey();
+                    return;
+                }
+            }
+        }
+
         if (parking[i] == regPlate)
         {
             parking[i] = null; //Assings the spot in the array where the veichle is parked at with the value null
@@ -213,17 +225,20 @@ void removeVeichle()
             break;
         }
     }
+    Console.WriteLine("\nThere is no veichle with that registration plate");
+    Console.Write("\n\nPress random key to continue...");
+    Console.ReadKey();
 }
 
 //Move
-void relocateVeichle()
+void relocateVehicle()
 {
     Console.Clear();
-    Console.Write("Type in the registration plate of the veichle that you'd like to move: ");
+    Console.Write("Type in the registration plate of the vehicle that you'd like to move: ");
     string regPlate = Console.ReadLine();
 
-    Console.WriteLine("\nIs the veichle you'd like to move a car [1] or a motorcycle [2]?");
-    Console.Write("Type in the number of the correct veichle type: ");
+    Console.WriteLine("\nIs the vehicle you'd like to move a car [1] or a motorcycle [2]?");
+    Console.Write("Type in the number of the correct vehicle type: ");
     int veichleType = int.Parse(Console.ReadLine());
     
     if (veichleType == 1)
@@ -244,25 +259,6 @@ void relocateVeichle()
         return;
     }
 
-    int plateFound = 0;
-    for (int i = 0; i < parking.Length; ++i)
-    {
-        for (int j = 0; j < parking.Length; j++)
-        {
-            if (parking[j] == regPlate)
-            {
-                plateFound++;
-            }
-        }
-        if (plateFound == 0)
-        {
-            Console.WriteLine("\nThere is no veichle with that registration plate");
-            Console.Write("\n\nPress random key to continue...");
-            Console.ReadKey();
-            return;
-        }
-    }
-
     Console.Write("\nNow type in the number of the P-Spot that you'd like to move it to: ");
     int moveTo = int.Parse(Console.ReadLine());
 
@@ -270,6 +266,51 @@ void relocateVeichle()
     {
         for (int i = 0; i < parking.Length; ++i)
         {
+            if (parking[i] != null)
+            {
+                string subString = parking[i].ToString();
+                int searchSeperator = subString.IndexOf("|");
+
+                if (searchSeperator > -1)
+                {
+                    string[] splitStrings = subString.Split("|");
+                    string joinStrings = splitStrings[0] + "|" + splitStrings[1];
+
+                    if (splitStrings[0] == regPlate)
+                    {
+                        for (int j = 0; j < parking.Length; j++)
+                        {
+                            if (spotNr[j] == moveTo)
+                            {
+                                parking[j] = splitStrings[0];
+                            }
+                        }
+                        parking[i] = splitStrings[1];
+                        Console.WriteLine(" ");
+                        Console.WriteLine($"{regPlate} has been moved to P-Spot {spotNr[moveTo-1]}");
+                        Console.Write("\n\nPress random key to continue...");
+                        Console.ReadKey();
+                        return;
+                    }
+                    else if (splitStrings[1] == regPlate)
+                    {
+                        for (int j = 0; j < parking.Length; j++)
+                        {
+                            if (spotNr[j] == moveTo)
+                            {
+                                parking[j] = splitStrings[1];
+                            }
+                        }
+                        parking[i] = splitStrings[0];
+                        Console.WriteLine(" ");
+                        Console.WriteLine($"{regPlate} has been moved to P-Spot {spotNr[moveTo-1]}");
+                        Console.Write("\n\nPress random key to continue...");
+                        Console.ReadKey();
+                        return;
+                    }
+                }
+            }
+            
             if (spotNr[i] == moveTo && parking[i] != null)
             {
                 string subString = parking[i].ToString();
@@ -333,19 +374,22 @@ void relocateVeichle()
             Console.WriteLine($"{regPlate} has been parked at P-Spot {spotNr[i]}");
             Console.Write("\n\nPress random key to continue...");
             Console.ReadKey();
-            break;
+            return;
         }
     }
+    Console.WriteLine("\nThere is no vehicle with that registration plate");
+    Console.Write("\n\nPress random key to continue...");
+    Console.ReadKey();
 }
 
 //Find
-void findVeichle()
+void findVehicle()
 {
     Console.Clear();
-    Console.Write("Type in the registration plate of the veichle that you'd like to find: ");
+    Console.Write("Type in the registration plate of the vehicle that you'd like to find: ");
     string regPlate = Console.ReadLine();
 
-    Console.WriteLine("\nIs the veichle you'd like to find a car [1] or a motorcycle [2]?");
+    Console.WriteLine("\nIs the vehicle you'd like to find a car [1] or a motorcycle [2]?");
     Console.Write("Type in the number of the correct veichle type: ");
     int veichleType = int.Parse(Console.ReadLine());
 
@@ -367,36 +411,47 @@ void findVeichle()
         return;
     }
 
-    int plateFound = 0;
-    for (int i = 0; i < parking.Length; ++i)
-    {
-        for (int j = 0; j < parking.Length; j++)
-        {
-            if (parking[j] == regPlate)
-            {
-                plateFound++;
-            }
-        }
-        if (plateFound == 0)
-        {
-            Console.WriteLine("\nThere is no veichle with that registration plate");
-            Console.Write("\n\nPress random key to continue...");
-            Console.ReadKey();
-            return;
-        }
-    }
-
     for (int i = 0; i < parking.Length; i++)
     {
+        if (parking[i] != null)
+        {
+            string subString = parking[i].ToString();
+            int searchSeperator = subString.IndexOf("|");
+
+            if (searchSeperator > -1)
+            {
+                string[] splitStrings = subString.Split("|");
+                if (splitStrings[0] == regPlate)
+                {
+                    Console.WriteLine(" ");
+                    Console.WriteLine($"{regPlate} can be found at P-Spot {spotNr[i]} with {splitStrings[1]}");
+                    Console.Write("\n\nPress random key to return to continue...");
+                    Console.ReadKey();
+                    return;
+                }
+                else if (splitStrings[1] == regPlate)
+                {
+                    Console.WriteLine(" ");
+                    Console.WriteLine($"{regPlate} can be found at P-Spot {spotNr[i]} with {splitStrings[0]}");
+                    Console.Write("\n\nPress random key to return to continue...");
+                    Console.ReadKey();
+                    return;
+                }
+            }
+        }
+        
         if (regPlate == parking[i])
         {
             Console.WriteLine(" ");
             Console.WriteLine($"{regPlate} can be found at P-Spot {spotNr[i]}");
             Console.Write("\n\nPress random key to return to continue...");
             Console.ReadKey();
-            break;
+            return;
         }
     }
+    Console.WriteLine("\nThere is no vehicle with that registration plate");
+    Console.Write("\n\nPress random key to continue...");
+    Console.ReadKey();
 }
 
 //Show
