@@ -1,4 +1,4 @@
-﻿// Prague Parking
+// Prague Parking //
 
 string[] parkingSpots = new string[101];
 Random random = new Random();
