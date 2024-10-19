@@ -60,14 +60,14 @@ class Program
             switch (choice)
             {
                 case "1":
-                    Console.WriteLine("Enter license plate:");
+                    Console.WriteLine("Enter license number:");
                     string regNumber = Console.ReadLine();
                     Console.WriteLine("Enter vehicle type (Car/MC):");
                     string type = Console.ReadLine();
                     ParkVehicle(regNumber, type);
                     break;
                 case "2":
-                    Console.WriteLine("Enter license plate:");
+                    Console.WriteLine("Enter license number:");
                     string regNumberRemove = Console.ReadLine();
                     RemoveVehicle(regNumberRemove);
                     break;
@@ -91,7 +91,7 @@ class Program
                     MoveVehicle(fromSpot, toSpot);
                     break;
                 case "4":
-                    Console.WriteLine("Enter license plate:");
+                    Console.WriteLine("Enter license number:");
                     string searchRegNumber = Console.ReadLine();
                     FindVehicle(searchRegNumber);
                     break;
@@ -121,13 +121,13 @@ class Program
     {
         if (regNumber.Length > 10)
         {
-            Console.WriteLine("License plate cannot be longer than 10 characters.");
+            Console.WriteLine("License number cannot be longer than 10 characters.");
             return;
         }
 
         while (type.ToLower() != "mc" && type.ToLower() != "car")
         {
-            Console.WriteLine("Invalid vehicletype. Enter Car or MC: ");
+            Console.WriteLine("Invalid vehicle type. Enter Car or MC: ");
             type = Console.ReadLine();
         }
 
@@ -280,7 +280,7 @@ class Program
         {
             if (parkingSpots[i] == null)
             {
-                Console.WriteLine($"Spot {i + 1} | Available");
+                Console.WriteLine($"Spot {i + 1} | Free");
             }
             else
             {
@@ -291,14 +291,14 @@ class Program
 
     static void ShowRegisteredVehicles()
     {
-        Console.WriteLine("Active parkings | ");
+        Console.WriteLine("Active parkings: ");
         bool foundAnyVehicle = false;
 
         for (int i = 0; i < parkingSpots.Length; i++)
         {
             if (parkingSpots[i] != null)
             {
-                Console.WriteLine($" {parkingSpots[i]}: P-spot {i + 1}");
+                Console.WriteLine($" {parkingSpots[i]}: Park-spot {i + 1}");
                 foundAnyVehicle = true;
             }
         }
@@ -313,8 +313,8 @@ class Program
     {
         int spotsPerRow = 10;
 
-        Console.WriteLine("Compact view over parkinggrid (Green = Available," +
-            "Yellow = 1/2 full, Red = Busy/Taken)\n");
+        Console.WriteLine("Parking grid - Compact view (Green = Free," +
+            "Yellow = 1/2 full, Red = Busy)\n");
 
         for (int i = 0; i < parkingSpots.Length; i++)
         {
@@ -336,7 +336,7 @@ class Program
                 Console.ForegroundColor = ConsoleColor.Red;
             }
 
-            Console.Write($"[{i + 1:D3}] ");
+            Console.Write($"[{i + 1:D3}] "); // Formatting integer
             Console.ResetColor();
         }
 
