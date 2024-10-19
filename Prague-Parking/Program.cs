@@ -8,7 +8,7 @@ void Main()
     ShowMenu();
 }
 
-void ShowMenu() // Metoden för menyhantering
+void ShowMenu()
 {
     bool running = true;
     while (running)
@@ -19,67 +19,67 @@ void ShowMenu() // Metoden för menyhantering
         Console.WriteLine("   PRAGUE PARKING");
         Console.WriteLine("======================\n");
 
-        Console.WriteLine("Välj ett alternativ:");
-        Console.WriteLine("1. Parkera:");
-        Console.WriteLine("2. Hämta ut ditt fordon:");
-        Console.WriteLine("3. Flytta till annan P-plats:");
-        Console.WriteLine("4. Sök:");
-        Console.WriteLine("5. Visa parkeringsplatser:");
-        Console.WriteLine("6. Visa alla registrerade fordon:");
-        Console.WriteLine("7. Avsluta");
+        Console.WriteLine("Choose option:");
+        Console.WriteLine("1. Park Vehicle:");
+        Console.WriteLine("2. Retrieve/Remove Vehicle:");
+        Console.WriteLine("3. Move Vehicle:");
+        Console.WriteLine("4. Search:");
+        Console.WriteLine("5. Show Parking Spots:");
+        Console.WriteLine("6. Show all registered vehicles:");
+        Console.WriteLine("7. Exit");
 
         string choice = Console.ReadLine();
 
         switch (choice)
         {
             case "1":
-                Console.WriteLine("Ange regnummer:");
+                Console.WriteLine("Enter license number:");
                 string regNumber = Console.ReadLine();
-                Console.WriteLine("Ange fordonstyp (MC/Bil):");
+                Console.WriteLine("Enter vehicle type (Car/MC):");
                 string type = Console.ReadLine();
-                ParkVehicle(regNumber, type); // Parkera fordonet
+                ParkVehicle(regNumber, type);
                break;
 
             /*case "1": // Random parkering
-                Console.WriteLine("Ange regnummer:");
+                Console.WriteLine("Enter license number:");
                 string regNumber = Console.ReadLine();
-                Console.WriteLine("Ange fordonstyp (MC/Bil):");
+                Console.WriteLine("Enter vehicle type (Car/MC):");
                 string type = Console.ReadLine();
-                ParkRandom(regNumber, type); // Parkera fordonet
+                ParkRandom(regNumber, type);
                 break;*/
-
+                
             case "2":
-                Console.WriteLine("Ange regnummer:");
+                Console.WriteLine("Enter license number:");
                 string regNumberRemove = Console.ReadLine();
                 RemoveVehicle(regNumberRemove);
                 break;
             case "3":
-                Console.WriteLine("Ange startplats:");
+                Console.WriteLine("Enter from spot:");
                 int fromSpot = int.Parse(Console.ReadLine());
-                Console.WriteLine("Ange slutplats:");
+                Console.WriteLine("Enter to spot:");
                 int toSpot = int.Parse(Console.ReadLine());
                 MoveVehicle(fromSpot, toSpot);
                 break;
             case "4":
-                Console.WriteLine("Ange regnummer:");
+                Console.WriteLine("Enter license number:");
                 string searchRegNumber = Console.ReadLine();
                 FindVehicle(searchRegNumber);
                 break;
             case "5":
-                ShowParkingSpots(); // Visa både lediga och upptagna parkeringsplatser
+                ShowParkingSpots();
                 break;
             case "6":
-                ShowRegisteredVehicles(); // Visa alla registrerade regnummer
+                ShowRegisteredVehicles();
                 break;
             case "7":
-                running = false; // Avsluta programmet
+                running = false; // Close program
                 break;
             default:
-                Console.WriteLine("Ogiltligt val.");
+                Console.WriteLine("Invalid choice.");
                 break;
         }
 
-        Console.WriteLine("\nTryck på Enter för att fortsätta...");
+        Console.WriteLine("\nPress enter to continue...");
         Console.ReadKey();
     }
 }
@@ -88,7 +88,7 @@ void ParkVehicle(string regNumber, string type)
 {
     if (regNumber.Length > 10)
     {
-        Console.WriteLine("Regnummer kan inte vara längre än 10 tecken.");
+        Console.WriteLine("License number cannot be longer than 10 characters.");
         return;
     }
 
@@ -97,30 +97,30 @@ void ParkVehicle(string regNumber, string type)
         if (parkingSpots[i] == null)
         {
             parkingSpots[i] = $"{regNumber} ({type})";
-            Console.WriteLine($"Fordon {regNumber} parkerad på plats {i + 1}");
+            Console.WriteLine($"{regNumber} parked on spot {i + 1}");
             return;
         }
         else if (type.ToLower() == "mc" && parkingSpots[i].Contains("mc") && !parkingSpots[i].Contains(","))
         {
             parkingSpots[i] += $", {regNumber} ({type})";
-            Console.WriteLine($"MC {regNumber} parkerad på plats {i + 1}");
+            Console.WriteLine($"MC {regNumber} parked on spot {i + 1}");
             return;
         }
     }
-    Console.WriteLine("Alla P-platser är upptagna.");
+    Console.WriteLine("No available parkingspots.");
 }
 
-// Extra metod om vi vill slumpa P-plats vid parkering
+// Extra method to random park
 void ParkRandom(string regNumber, string type)
 {
     if (regNumber.Length > 10)
     {
-        Console.WriteLine("Regnummer kan inte vara längre än 10 tecken.");
+        Console.WriteLine("License number cannot be longer than 10 characters.");
         return;
     }
 
-    bool isParked = false; // Flagga för att se om fordonet har parketats
-    int attempts = 0; // För att hålla på antalet försök
+    bool isParked = false;
+    int attempts = 0;
 
     while (!isParked && attempts < 101)
     {
@@ -129,14 +129,14 @@ void ParkRandom(string regNumber, string type)
         if (parkingSpots[randomSpot] == null)
         {
             parkingSpots[randomSpot] = $"{regNumber} ({type})";
-            Console.WriteLine($"{regNumber} parkerad på {randomSpot + 1}.");
+            Console.WriteLine($"{regNumber} parked on {randomSpot + 1}.");
             isParked = true;
             return;
         }
         else if (type.ToLower() == "mc" && parkingSpots[randomSpot].Contains("mc") && !parkingSpots[randomSpot].Contains(","))
         {
             parkingSpots[randomSpot] += $", {regNumber} ({type})";
-            Console.WriteLine($"MC {regNumber} parkerad på {randomSpot + 1}.");
+            Console.WriteLine($"MC {regNumber} parked on {randomSpot + 1}.");
             isParked = true;
             return;
         }
@@ -145,7 +145,7 @@ void ParkRandom(string regNumber, string type)
 
     if (!isParked)
     {
-        Console.WriteLine("Alla P-platser är upptagna.");
+        Console.WriteLine("No available parkingspots.");
     }
 }
 
@@ -155,7 +155,6 @@ void RemoveVehicle(string regNumber)
     {
         if (parkingSpots[i] != null && parkingSpots[i].Contains(regNumber))
         {
-            // Om det är en MC och det finns två MC på platsen, ta bort bara den valda MC
             if (parkingSpots[i].Contains(","))
             {
                 parkingSpots[i] = parkingSpots[i].Replace($"{regNumber} (mc)", "").Trim().Trim(',');
@@ -163,29 +162,28 @@ void RemoveVehicle(string regNumber)
             else
             {
                 parkingSpots[i] = null;
-                Console.WriteLine($"{regNumber} har hämtats ut från: P-plats {i + 1}");
+                Console.WriteLine($"{regNumber} has been retrieved from: Park-spot {i + 1}");
             }
             return;
         }
     }
-    Console.WriteLine($"Fordon med regnummer {regNumber} hittas ej.");
+    Console.WriteLine($"Vehicle with license {regNumber} not found.");
 }
 
 void MoveVehicle(int fromSpot, int toSpot)
 {
-    // Justerar så att index börjar på 1 för användarvänlighet
     fromSpot--;
     toSpot--;
 
     if (fromSpot < 0 || fromSpot >= parkingSpots.Length || toSpot < 0 || toSpot >= parkingSpots.Length)
     {
-        Console.WriteLine("Ogiltligt platsnummer");
+        Console.WriteLine("Invalid licensenumber");
         return;
     }
 
     if (parkingSpots[fromSpot] == null)
     {
-        Console.WriteLine("Det finns inget fordon på angiven plats.");
+        Console.WriteLine("No vehicles at the park-spot.");
         return;
     }
 
@@ -194,11 +192,11 @@ void MoveVehicle(int fromSpot, int toSpot)
         // Flyttar fordon till ny plats
         parkingSpots[toSpot] = parkingSpots[fromSpot];
         parkingSpots[fromSpot] = null;
-        Console.WriteLine($"Fordon flyttat från plats {fromSpot + 1} till plats {toSpot + 1}.");
+        Console.WriteLine($"Vehicle moved from spot {fromSpot + 1} to spot {toSpot + 1}.");
     }
     else
     {
-        Console.WriteLine("Angiven plats är upptagen.");
+        Console.WriteLine("Park-spot is taken.");
     }
 }
 
@@ -209,11 +207,11 @@ void FindVehicle(string regNumber)
     {
         if (parkingSpots[i] != null && parkingSpots[i].Contains(regNumber))
         {
-            Console.WriteLine($"{regNumber} hittat: P-plats {i + 1}.");
+            Console.WriteLine($"{regNumber} found: Park-spot {i + 1}.");
             return;
         }
     }
-    Console.WriteLine($"{regNumber} hittas ej.");
+    Console.WriteLine($"{regNumber} not found.");
 }
 
 void ShowParkingSpots()
@@ -222,19 +220,19 @@ void ShowParkingSpots()
     {
         if (parkingSpots[i] == null)
         {
-            Console.WriteLine($"Plats {i + 1}: Ledig");
+            Console.WriteLine($"Park-spot {i + 1}: Free");
         }
         else
         {
-            Console.WriteLine($"Plats {i + 1}: {parkingSpots[i]}");
+            Console.WriteLine($"Park-spot {i + 1}: {parkingSpots[i]}");
         }
     }
 }
 
 void ShowRegisteredVehicles()
 {
-    Console.WriteLine("Aktiva parkeringar: ");
-    bool foundAnyVehicle = false; // Flagga för att kontrollera om vi hittar fordon
+    Console.WriteLine("Active parkings: ");
+    bool foundAnyVehicle = false;
 
     for (int i = 0; i < parkingSpots.Length; i++)
     {
@@ -247,6 +245,6 @@ void ShowRegisteredVehicles()
 
     if (!foundAnyVehicle)
     {
-        Console.WriteLine("Inget fordon är registrerat.");
+        Console.WriteLine("No vehicle registered.");
     }
 }
