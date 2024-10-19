@@ -1,17 +1,14 @@
-﻿//Prague parking
+﻿string[] parking = new string[100]; //A string-array that will be loaded with the registration plates that the user types in
 
-string[] parking = new string[100];
-
-int[] spotNr = new int[101];
+int[] spotNr = new int[101]; //An array to help make sure that the first parking space is 1 and not 0
 for (int i = 0; i < parking.Length; i++)
 {
     spotNr[i] = i + 1;
 }
 
-int menu = 0;
+int menu = 0; //Used with the menu to help determine which function to execute
 
-/************** Main program loop ****************/
-
+//Menu
 do
 {
     Console.Clear();
@@ -24,7 +21,7 @@ do
     Console.WriteLine("[5] Show Parking\n");
     Console.WriteLine("To use program:\nType in the number of one of the above functions,\nand then press the [ENTER] key to run it\n");
 
-    menu = int.Parse(Console.ReadLine());
+    menu = int.Parse(Console.ReadLine()); //Determines which switch-case to access depending on what value the user loads the int with
     switch (menu)
     {
         case 1:
@@ -47,9 +44,7 @@ do
             Console.WriteLine("Ending program...");
             break;
     }
-} while (menu != 0);
-
-/*************** Methods for operations *************/
+} while (menu != 0); //The do-while loop and program ends when the user loads the int with a 0
 
 //Park
 void addVeichle()
@@ -58,7 +53,8 @@ void addVeichle()
     Console.Write("Type in the registration plate for the veichle you'd like to park: ");
     string regPlate = Console.ReadLine();
 
-    if (regPlate.Length > 10)
+    //Makes sure that user doesn't use more than 10 characters to type in a registration plate
+    if (regPlate.Length > 10) 
     {
         Console.WriteLine("\nThe registration plate can't have more than 10 characters in it");
         Console.Write("\n\nPress random key to continue...");
@@ -67,8 +63,10 @@ void addVeichle()
     }
 
     Console.WriteLine("\nIs the veichle that you'd like to park a car [1] or a motorcycle [2]?");
-    Console.Write("Type in the number of the correct veichle type and then press the [ENTER] key: ");
+    Console.Write("Type in the number of the correct veichle type: ");
     int veichleType = int.Parse(Console.ReadLine());
+    
+    //Joins the string for the registration plate with one of two strings depending on user input
     if (veichleType == 1)
     {
         string car = "CAR";
@@ -90,21 +88,18 @@ void addVeichle()
     Console.Write("\nNow type in the number of the P-Spot that you'd like to park the car at: ");
     int moveTo = int.Parse(Console.ReadLine());
 
+    //Senses whether the veichle is a motorcycle
     if (veichleType == 2)
     {
+        //A for-loop used to park motorcycles, and makes it possible to place two of them at the same spot
         for (int i = 0; i < parking.Length; ++i)
         {
             if (spotNr[i] == moveTo && parking[i] != null)
             {
-                string subString = parking[i].ToString();
-                int searchMotorcycle = subString.IndexOf("MC#");
-                int searchSeperator = subString.IndexOf("|");
+                string subString = parking[i].ToString(); //Creates a substring from the parking-array
+                int searchSeperator = subString.IndexOf("|"); //Used to find whether the substring has a seperator or not
 
-                if (searchMotorcycle == -1)
-                {
-                    break;
-                }
-                else if (searchSeperator > -1)
+                if (searchSeperator > -1)
                 {
                     Console.WriteLine("\nThere's already two motorcycles parked at this spot");
                     Console.Write("\n\nPress random key to continue...");
@@ -120,8 +115,8 @@ void addVeichle()
                             parking[j] = null;
                         }
                     }
-                    string joinedRegPlate = subString + "|" + regPlate;
-                    parking[i] = joinedRegPlate;
+                    string joinedRegPlate = subString + "|" + regPlate; //Creates a new string representing two motorcycles
+                    parking[i] = joinedRegPlate; //Fill the current array position with the newlycreated string, parking the two motorcycles at the chosen spot
                     Console.WriteLine(" ");
                     Console.WriteLine($"{regPlate} has been parked at P-Spot {spotNr[i]} with {subString}");
                     Console.Write("\n\nPress random key to continue...");
@@ -132,6 +127,7 @@ void addVeichle()
         }
     }
 
+    //A for-loop used to park cars, and can not be used to place more than one veichle at a spot
     for (int i = 0; i < parking.Length; i++)
     {
         if (spotNr[i] == moveTo && parking[i] != null)
@@ -161,8 +157,9 @@ void removeVeichle()
     string regPlate = Console.ReadLine();
 
     Console.WriteLine("\nIs the veichle you'd like to remove a car [1] or a motorcycle [2]?");
-    Console.Write("Type in the number of the correct veichle type and then press the [ENTER] key: ");
+    Console.Write("Type in the number of the correct veichle type: ");
     int veichleType = int.Parse(Console.ReadLine());
+
     if (veichleType == 1)
     {
         string car = "CAR";
@@ -181,6 +178,7 @@ void removeVeichle()
         return;
     }
 
+    //Used to check whether the veichle the user wants is there or not
     int plateFound = 0;
     for (int i = 0; i < parking.Length; ++i)
     {
@@ -191,6 +189,7 @@ void removeVeichle()
                 plateFound++;
             }
         }
+        //Sends the user back to the menu if nothing was found
         if (plateFound == 0)
         {
             Console.WriteLine("\nThere is no veichle with that registration plate");
@@ -200,11 +199,12 @@ void removeVeichle()
         }
     }
 
+    //Used to find and remove the veichle that the user is looking for
     for (int i = 0; i < parking.Length; i++)
     {
         if (parking[i] == regPlate)
         {
-            parking[i] = null;
+            parking[i] = null; //Assings the spot in the array where the veichle is parked at with the value null
 
             Console.WriteLine(" ");
             Console.WriteLine($"{regPlate} has been removed from P-Spot {spotNr[i]}");
@@ -223,8 +223,9 @@ void relocateVeichle()
     string regPlate = Console.ReadLine();
 
     Console.WriteLine("\nIs the veichle you'd like to move a car [1] or a motorcycle [2]?");
-    Console.Write("Type in the number of the correct veichle type and then press the [ENTER] key: ");
+    Console.Write("Type in the number of the correct veichle type: ");
     int veichleType = int.Parse(Console.ReadLine());
+    
     if (veichleType == 1)
     {
         string car = "CAR";
@@ -345,8 +346,9 @@ void findVeichle()
     string regPlate = Console.ReadLine();
 
     Console.WriteLine("\nIs the veichle you'd like to find a car [1] or a motorcycle [2]?");
-    Console.Write("Type in the number of the correct veichle type and then press the [ENTER] key: ");
+    Console.Write("Type in the number of the correct veichle type: ");
     int veichleType = int.Parse(Console.ReadLine());
+
     if (veichleType == 1)
     {
         string car = "CAR";
@@ -402,9 +404,10 @@ void showParking()
 {
     Console.Clear();
 
-    int rowLength = 10;
+    int rowLength = 10; //Used to help make sure that a new row is made when 10 values are shown
 
     Console.WriteLine("Parking: \n");
+
     for (int i = 0; i < parking.Length; i++)
     {
         if (i % rowLength == 0 && i != 0)
@@ -412,7 +415,7 @@ void showParking()
             Console.WriteLine();
         }
 
-        if (parking[i] == null)
+        if (parking[i] == null) //Assigns open spots the color green
         {
             Console.ForegroundColor = ConsoleColor.Green;
             if (spotNr[i] < 10)
@@ -429,7 +432,7 @@ void showParking()
             }
             Console.ResetColor();
         }
-        else if (parking[i] != null)
+        else if (parking[i] != null) //Assigns parked spots either the color red or yellow, depending on whether there is room for other veichles to be parked there or not
         {
             string subString = parking[i].ToString();
             int searchMotorcycle = subString.IndexOf("MC#");
