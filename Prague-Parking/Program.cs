@@ -40,7 +40,7 @@ void ShowMenu()
                 ParkVehicle(regNumber, type);
                break;
 
-            /*case "1": // Random parkering
+            /*case "1": // Random parking
                 Console.WriteLine("Enter license number:");
                 string regNumber = Console.ReadLine();
                 Console.WriteLine("Enter vehicle type (Car/MC):");
@@ -83,6 +83,8 @@ void ShowMenu()
         Console.ReadKey();
     }
 }
+
+// *********** Main methods *********** //
 
 void ParkVehicle(string regNumber, string type)
 {
@@ -189,7 +191,6 @@ void MoveVehicle(int fromSpot, int toSpot)
 
     if (parkingSpots[toSpot] == null)
     {
-        // Flyttar fordon till ny plats
         parkingSpots[toSpot] = parkingSpots[fromSpot];
         parkingSpots[fromSpot] = null;
         Console.WriteLine($"Vehicle moved from spot {fromSpot + 1} to spot {toSpot + 1}.");
