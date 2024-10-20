@@ -4,18 +4,21 @@ public class ParkingSpot
 {
     public string RegNumber { get; set; }
     public string VehicleType { get; set; }
-    public DateTime CheckInTime { get; set; }
+    public string CheckInTime { get; set; }
 
-    public ParkingSpot(string regNumber, string vehicleType)
+    public ParkingSpot(string regNumber, string vehicleType, DateTime checkInTime)
     {
-        RegNumber = regNumber;
-        VehicleType = vehicleType;
-        CheckInTime = DateTime.Now;
+
+        this.RegNumber = regNumber;
+        this.VehicleType = vehicleType;
+        this.CheckInTime = checkInTime.ToString();
     }
+
+
 
     public TimeSpan GetParkDuration()
     {
-        return DateTime.Now - CheckInTime;
+        return DateTime.Now - DateTime.Parse(CheckInTime);
     }
 
     public override string ToString()
@@ -28,6 +31,8 @@ public class ParkingSpot
 class Program
 {
     static ParkingSpot[] parkingSpots = new ParkingSpot[100];
+
+
 
     static void Main(string[] args)
     {
@@ -53,7 +58,8 @@ class Program
             Console.WriteLine("5. Show Parking Spots");
             Console.WriteLine("6. Show Parking Spots | COLOURED-GRID |");
             Console.WriteLine("7. Show all registered vehicles");
-            Console.WriteLine("8. Exit");
+            Console.WriteLine("8. Optimise parking");
+            Console.WriteLine("9. Exit");
 
             string choice = Console.ReadLine();
 
@@ -105,6 +111,9 @@ class Program
                     ShowRegisteredVehicles();
                     break;
                 case "8":
+                    OptimizeParking();
+                    break;
+                case "9":
                     running = false;
                     break;
                 default:
@@ -136,7 +145,7 @@ class Program
             if (parkingSpots[i] == null)  // Om platsen är ledig
             {
 
-                parkingSpots[i] = new ParkingSpot(regNumber, type);
+                parkingSpots[i] = new ParkingSpot(regNumber, type, DateTime.Now);
                 Console.WriteLine($"{(type.ToLower() == "mc" ? "MC" : "Car")} {regNumber} parked on spot {i + 1}");
                 Console.WriteLine($"Check in: {parkingSpots[i].CheckInTime:yyyy-MM-dd HH:mm:ss}");
                 return;
@@ -144,7 +153,7 @@ class Program
             else if (type.ToLower() == "mc" && parkingSpots[i].VehicleType == "mc" && i + 1 < parkingSpots.Length && parkingSpots[i + 1] == null)
             {
 
-                parkingSpots[i + 1] = new ParkingSpot(regNumber, type);
+                parkingSpots[i + 1] = new ParkingSpot(regNumber, type, DateTime.Now);
                 Console.WriteLine($"MC {regNumber} parked on spot {i + 2}");
                 Console.WriteLine($"Check in: {parkingSpots[i + 1].CheckInTime:yyyy-MM-dd HH:mm:ss}");
                 return;
@@ -193,10 +202,12 @@ class Program
                 if (mcList[0].Contains(regNumber))
                 {
                     parkingSpots[i].RegNumber = mcList[1].Trim();
+                    Console.WriteLine("TRIMMED MC LIST 1 " + mcList);
                 }
                 else if (mcList[1].Contains(regNumber))
                 {
                     parkingSpots[i].RegNumber = mcList[0].Trim();
+                    Console.WriteLine("TRIMMED MC LIST 2 " + mcList);
                 }
 
                 TimeSpan duration = parkingSpots[i].GetParkDuration();
@@ -227,8 +238,6 @@ class Program
 
         Console.WriteLine($"{regNumber} license - not found.");
     }
-
-
     static void MoveVehicle(int fromSpot, int toSpot)
     {
         fromSpot--;
@@ -236,10 +245,36 @@ class Program
 
         if (parkingSpots[fromSpot] == null)
         {
-            Console.WriteLine("No vehicle registered on spot.");
+            Console.WriteLine("No vehicle registered on the from-spot.");
             return;
         }
 
+        // Prevent moving to a spot already occupied by a car
+        if (parkingSpots[toSpot] != null && parkingSpots[toSpot].VehicleType.ToLower() == "car")
+        {
+            Console.WriteLine("Cannot move to this spot. A car is already parked here.");
+            return;
+        }
+
+        // Handle moving an MC
+        if (parkingSpots[toSpot] != null && parkingSpots[toSpot].VehicleType.ToLower() == "mc")
+        {
+            // Check if there is already another MC parked here
+            if (parkingSpots[toSpot].RegNumber.Contains(","))
+            {
+                Console.WriteLine("Cannot move MC to this spot. There are already 2 MCs parked.");
+                return;
+            }
+            else if (parkingSpots[fromSpot].VehicleType.ToLower() == "mc")
+            {
+                parkingSpots[toSpot].RegNumber += $", {parkingSpots[fromSpot].RegNumber}";
+                parkingSpots[fromSpot] = null;
+                Console.WriteLine($"MC moved to spot {toSpot + 1}.");
+                return;
+            }
+        }
+
+        // Move any other type of vehicle if the spot is empty
         if (parkingSpots[toSpot] == null)
         {
             parkingSpots[toSpot] = parkingSpots[fromSpot];
@@ -248,32 +283,11 @@ class Program
             return;
         }
 
-        if (parkingSpots[toSpot].VehicleType.ToLower() == "car")
-        {
-            Console.WriteLine("Park-spot busy. Cannot move to this spot.");
-            return;
-        }
-
-        if (parkingSpots[toSpot].VehicleType.ToLower() == "mc" && parkingSpots[toSpot].RegNumber.Contains(","))
-        {
-            Console.WriteLine("Cannot move to this spot. There are already 2 MC or 1 car parked.");
-            return;
-        }
-
-        if (parkingSpots[toSpot].VehicleType.ToLower() == "mc" && parkingSpots[fromSpot].VehicleType.ToLower() == "mc")
-        {
-            Console.WriteLine($"Matching MC {parkingSpots[fromSpot].RegNumber} with MC {parkingSpots[toSpot].RegNumber}");
-            parkingSpots[toSpot].RegNumber += $", {parkingSpots[fromSpot].RegNumber}";
-            parkingSpots[fromSpot] = null;
-            Console.WriteLine($"Moved MC to spot {toSpot + 1}.");
-        }
-        else
-        {
-            Console.WriteLine("Parking spot is taken.");
-        }
+        Console.WriteLine("Cannot move vehicle to this spot.");
     }
 
-    static void FindVehicle(string regNumber)
+
+    /*static void FindVehicle(string regNumber)
     {
         for (int i = 0; i < parkingSpots.Length; i++)
         {
@@ -284,7 +298,32 @@ class Program
             }
         }
         Console.WriteLine($"{regNumber} license - not found.");
+     }*/
+
+    static void FindVehicle(string regNumber)
+    {
+        for (int i = 0; i < parkingSpots.Length; i++)
+        {
+            if (parkingSpots[i] != null)
+            {
+                // Split registreringsnummer if there are multiple MCs on the same spot
+                string[] regNumbers = parkingSpots[i].RegNumber.Split(", ");
+
+                // Loop through all registreringsnummer in the spot (handles multiple MCs)
+                foreach (string reg in regNumbers)
+                {
+                    if (reg.Equals(regNumber, StringComparison.OrdinalIgnoreCase))
+                    {
+                        Console.WriteLine($"Vehicle {regNumber} found at spot {i + 1}.");
+                        return;
+                    }
+                }
+            }
+        }
+
+        Console.WriteLine("Vehicle not found.");
     }
+
 
     static void ShowParkingSpots()
     {
@@ -353,5 +392,68 @@ class Program
         }
 
         Console.WriteLine("\n");
+    }
+
+    static void OptimizeParking()
+    {
+        int spaceOne = 0;
+        int spaceTwo = 0;
+        string mcOne = "";
+        string mcTwo = "";
+        ParkingSpot[] carPark = parkingSpots;
+
+        for (int i = 0; i < carPark.Length; i++)
+        {
+            if (carPark[i] == null)
+            {
+                continue;
+            }
+            else if (carPark[i].VehicleType.Contains("mc") && !carPark[i].RegNumber.Contains(','))
+            {
+                spaceOne = i;
+                mcOne = carPark[i].RegNumber;
+
+                for (int j = i + 1; j < carPark.Length; j++)
+                {
+                    if (carPark[j] == null)
+                    {
+                        break;
+                    }
+                    else
+                    {
+                        if (carPark[j].VehicleType.Contains("mc") && !carPark[j].RegNumber.Contains(','))
+                        {
+                            spaceTwo = j;
+                            mcTwo = carPark[j].RegNumber;
+                            break;
+                        }
+                        else if (carPark[j].VehicleType.Contains("mc") && carPark[j].RegNumber.Contains(',') || carPark[j] == null)
+                        {
+                            Console.WriteLine("none have been moved");
+                            break;
+                        }
+                    }
+                }
+                break;
+            }
+        }
+
+
+
+        if (mcTwo != "")
+        {
+            string optimisedParking = carPark[spaceOne].RegNumber + ", " + carPark[spaceTwo];
+            carPark[spaceOne].RegNumber = optimisedParking;
+            carPark[spaceOne].VehicleType = "mc";
+            carPark[spaceOne].CheckInTime = DateTime.Now.ToString();
+            Console.WriteLine($"You have moved mc with registration {mcTwo}");
+            Console.WriteLine($"From space: {spaceTwo + 1} to space: {spaceOne + 1}.");
+            carPark[spaceTwo] = null;
+        }
+        else
+        {
+            Console.WriteLine("No mc's have been moved...");
+
+        }
     }
 }
