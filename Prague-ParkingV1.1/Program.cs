@@ -376,27 +376,27 @@ class Program
 
         Console.WriteLine("\n");
     }
-  
+    //Method for optimizing parking spaces for mc's. 
     static void OptimizeParking()
     {
         int spaceOne = 0;
         int spaceTwo = 0;
         string mcOne = "";
         string mcTwo = "";
-        ParkingSpot[] carPark = parkingSpots;
+        ParkingSpot[] carPark = parkingSpots; //New array name instead of changing array in code block (code was imported from another project)
 
-        for (int i = 0; i < carPark.Length; i++)
+        for (int i = 0; i < carPark.Length; i++)    //Loops through parking spaces and checks for mc
         {
             if (carPark[i] == null)
             {
                 continue;
             }
-            else if (carPark[i].VehicleType.Contains("mc") && !carPark[i].RegNumber.Contains(','))
+            else if (carPark[i].VehicleType.Contains("mc") && !carPark[i].RegNumber.Contains(',')) 
             {
                 spaceOne = i;
                 mcOne = carPark[i].RegNumber;
 
-                for (int j = i + 1; j < carPark.Length; j++)
+                for (int j = i + 1; j < carPark.Length; j++)    //Loop through remaining parking spaces
                 {
                     if (carPark[j] == null)
                     {
@@ -421,17 +421,15 @@ class Program
             }
         }
 
-
-
         if (mcTwo != "")
         {
-            string optimisedParking = carPark[spaceOne].RegNumber + ", " + carPark[spaceTwo];
+            string optimisedParking = carPark[spaceOne].RegNumber + ", " + carPark[spaceTwo]; 
             carPark[spaceOne].RegNumber = optimisedParking;
             carPark[spaceOne].VehicleType = "mc";
             carPark[spaceOne].CheckInTime = DateTime.Now.ToString();
-            Console.WriteLine($"You have moved mc with registration {mcTwo}");
+            Console.WriteLine($"You have moved mc with registration {mcTwo}"); // Prints a simple instruction to console
             Console.WriteLine($"From space: {spaceTwo + 1} to space: {spaceOne + 1}.");
-            carPark[spaceTwo] = null;
+            carPark[spaceTwo] = null; //Set previous space to empty
         }
         else
         {
