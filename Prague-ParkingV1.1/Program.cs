@@ -8,7 +8,7 @@ public class ParkingSpot
 
     public ParkingSpot(string regNumber, string vehicleType, DateTime checkInTime)
     {
-
+        // Store the registration number, vehicle type, and check-in time when a vehicle is parked
         this.RegNumber = regNumber;
         this.VehicleType = vehicleType;
         this.CheckInTime = checkInTime.ToString();
@@ -30,8 +30,8 @@ public class ParkingSpot
 
 class Program
 {
+    // String-array from previous version but as a class instead
     static ParkingSpot[] parkingSpots = new ParkingSpot[100];
-
 
 
     static void Main(string[] args)
@@ -126,6 +126,8 @@ class Program
         }
     }
 
+        //*************** Methods for operations *************//
+
     static void ParkVehicle(string regNumber, string type)
     {
         if (regNumber.Length > 10)
@@ -142,7 +144,7 @@ class Program
 
         for (int i = 0; i < parkingSpots.Length; i++)
         {
-            if (parkingSpots[i] == null)  // Om platsen är ledig
+            if (parkingSpots[i] == null)
             {
 
                 parkingSpots[i] = new ParkingSpot(regNumber, type, DateTime.Now);
@@ -152,7 +154,7 @@ class Program
             }
             else if (type.ToLower() == "mc" && parkingSpots[i].VehicleType == "mc" && i + 1 < parkingSpots.Length && parkingSpots[i + 1] == null)
             {
-
+                // If a motorcycle and the next spot is empty, park the motorcycle there
                 parkingSpots[i + 1] = new ParkingSpot(regNumber, type, DateTime.Now);
                 Console.WriteLine($"MC {regNumber} parked on spot {i + 2}");
                 Console.WriteLine($"Check in: {parkingSpots[i + 1].CheckInTime:yyyy-MM-dd HH:mm:ss}");
@@ -162,7 +164,7 @@ class Program
 
         Console.WriteLine("No available parkingspots.");
     }
-
+    
     static void RemoveVehicle(string regNumber)
     {
         for (int i = 0; i < parkingSpots.Length; i++)
