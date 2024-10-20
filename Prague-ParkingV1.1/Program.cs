@@ -58,7 +58,7 @@ class Program
             Console.WriteLine("5. Show Parking Spots");
             Console.WriteLine("6. Show Parking Spots | COLOURED-GRID |");
             Console.WriteLine("7. Show all registered vehicles");
-            Console.WriteLine("8. Optimise parking");
+            Console.WriteLine("8. Optimize parking");
             Console.WriteLine("9. Exit");
 
             string choice = Console.ReadLine();
@@ -249,17 +249,15 @@ class Program
             return;
         }
 
-        // Prevent moving to a spot already occupied by a car
         if (parkingSpots[toSpot] != null && parkingSpots[toSpot].VehicleType.ToLower() == "car")
         {
             Console.WriteLine("Cannot move to this spot. A car is already parked here.");
             return;
         }
 
-        // Handle moving an MC
+
         if (parkingSpots[toSpot] != null && parkingSpots[toSpot].VehicleType.ToLower() == "mc")
         {
-            // Check if there is already another MC parked here
             if (parkingSpots[toSpot].RegNumber.Contains(","))
             {
                 Console.WriteLine("Cannot move MC to this spot. There are already 2 MCs parked.");
@@ -274,7 +272,6 @@ class Program
             }
         }
 
-        // Move any other type of vehicle if the spot is empty
         if (parkingSpots[toSpot] == null)
         {
             parkingSpots[toSpot] = parkingSpots[fromSpot];
@@ -286,30 +283,14 @@ class Program
         Console.WriteLine("Cannot move vehicle to this spot.");
     }
 
-
-    /*static void FindVehicle(string regNumber)
-    {
-        for (int i = 0; i < parkingSpots.Length; i++)
-        {
-            if (parkingSpots[i] != null && parkingSpots[i].RegNumber == regNumber)
-            {
-                Console.WriteLine($"{regNumber} found: P-spot {i + 1}.");
-                return;
-            }
-        }
-        Console.WriteLine($"{regNumber} license - not found.");
-     }*/
-
     static void FindVehicle(string regNumber)
     {
         for (int i = 0; i < parkingSpots.Length; i++)
         {
             if (parkingSpots[i] != null)
             {
-                // Split registreringsnummer if there are multiple MCs on the same spot
                 string[] regNumbers = parkingSpots[i].RegNumber.Split(", ");
 
-                // Loop through all registreringsnummer in the spot (handles multiple MCs)
                 foreach (string reg in regNumbers)
                 {
                     if (reg.Equals(regNumber, StringComparison.OrdinalIgnoreCase))
@@ -393,7 +374,7 @@ class Program
 
         Console.WriteLine("\n");
     }
-
+  
     static void OptimizeParking()
     {
         int spaceOne = 0;
